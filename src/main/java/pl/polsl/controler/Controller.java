@@ -110,20 +110,15 @@ public class Controller {
      */
     public void login(){
         LoginGUI loginUserGUI = new LoginGUI(); 
-        loginUserGUI.addLoginButtonListener(e -> {
-            handleLoginAction(loginUserGUI);
-            
-        });
-        loginUserGUI.addSignupButtonListener(e -> {
-            handleSignupAction(loginUserGUI);
-        });
+        loginUserGUI.addLoginButtonListener(e -> handleLoginAction(loginUserGUI));
+        loginUserGUI.addSignupButtonListener(e -> handleSignupAction(loginUserGUI));
     }
     
     /**
      * Updates the given table model with the provided list of movies.
      *
      * @param model The table model to update.
-     * @param movies The list of movies to populate the table with.
+     * @param movies The list of movies to populate the table width.
      * @throws ModelException If there is an issue updating the table model.
      */
     private void updateGUIMovieTable(TableModel model, ArrayList<Movie> movies) throws ModelException{
@@ -138,7 +133,7 @@ public class Controller {
      * Updates the rented movies table in the main GUI with the provided list of rented movies.
      *
      * @param mainGUI The main graphical user interface.
-     * @param rentedMovies The list of rented movies to populate the table with.
+     * @param rentedMovies The list of rented movies to populate the table width.
      * @throws ModelException If there is an issue updating the rented movies table.
      */
     private void updateGUIRentedMoviesTable(MainGUI mainGUI, ArrayList<Movie> rentedMovies) throws ModelException{
@@ -170,9 +165,7 @@ public class Controller {
             
             updateGUIRentedMoviesTable(mainGUI, user.getRentedMovies());
             
-            mainGUI.addExitMenuBarListener(e -> {
-                mainGUI.dispose();
-            });
+            mainGUI.addExitMenuBarListener(e -> mainGUI.dispose());
             
             mainGUI.addLogoutMenuBarListener(e -> {
                 mainGUI.dispose();
@@ -183,13 +176,13 @@ public class Controller {
             mainGUI.addButtonSearchMovieListener(e -> {
                 criteria.clear();
                 String title = mainGUI.getTypedTitle();
-                if(title.length() != 0) criteria.put(SearchCriterion.TITLE, title);
+                if(!title.isEmpty()) criteria.put(SearchCriterion.TITLE, title);
                 String director = mainGUI.getTypedDirector();
-                if(director.length() != 0) criteria.put(SearchCriterion.DIRECTOR, director);
+                if(!director.isEmpty()) criteria.put(SearchCriterion.DIRECTOR, director);
                 String releaseYear = mainGUI.getTypedReleaseYear();
-                if(releaseYear.length() != 0) criteria.put(SearchCriterion.RELEASE_YEAR, releaseYear);
+                if(!releaseYear.isEmpty()) criteria.put(SearchCriterion.RELEASE_YEAR, releaseYear);
                 String genre = mainGUI.getTypedGenre();
-                if(genre.length() != 0) criteria.put(SearchCriterion.GENRE, genre);
+                if(!genre.isEmpty()) criteria.put(SearchCriterion.GENRE, genre);
                 try{  
                     ArrayList<Movie>  tempMovies = user.getMovies(criteria);
                     updateGUIMovieTable(mainGUI.updateMoviesToDeleteTable(), tempMovies);
@@ -325,7 +318,7 @@ public class Controller {
                 String director = mainGUI.getTypedInsertDirector();
                 String releaseYear = mainGUI.getTypedInsertReleaseYear();
                 String genre = mainGUI.getTypedInsertGenre();
-                if(title.length() != 0 && director.length() != 0 && releaseYear.length() != 0 && genre.length() != 0){
+                if(!title.isEmpty() && !director.isEmpty() && !releaseYear.isEmpty() && !genre.isEmpty()){
                     try{
                         String moviePrice = JOptionPane.showInputDialog(null, "Type price:", "Set movie price", JOptionPane.PLAIN_MESSAGE);
                         Movie movie = new Movie(title, director, genre, Integer.parseInt(releaseYear), Double.parseDouble(moviePrice));

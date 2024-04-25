@@ -10,14 +10,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import pl.polsl.model.AdminUser;
-import pl.polsl.model.DatabaseControler;
-import pl.polsl.model.ModelException;
-import pl.polsl.model.Movie;
-import pl.polsl.model.PremiumUser;
-import pl.polsl.model.SearchCriterion;
-import pl.polsl.model.StandardUser;
-import pl.polsl.model.User;
 
 /**
  * This class contains unit tests for the DatabaseController class.
@@ -50,10 +42,10 @@ public class DatabaseControlerTest {
         "Users, Username, empty, 0"
     })
     public void testDelete(String table, String column, String condition, int expectedRowsDeleted) {
-        DatabaseControler databaseControler;
+        DatabaseController databaseControler;
         try {
             if(condition == null)condition="";
-            databaseControler = new DatabaseControler("TestDB.db");
+            databaseControler = new DatabaseController("TestDB.db");
             if(!condition.equals("empty")){
                 databaseControler.insertUser(condition, "Password123", 0);
             }
@@ -104,10 +96,10 @@ public class DatabaseControlerTest {
         "test4, Pass, 10,  7"
     })
     void testInsertUser(String userName, String password, int rank, int expectedErrorCode) {
-        DatabaseControler databaseControler;
+        DatabaseController databaseControler;
         //ModelException exception = null;
         try{
-            databaseControler = new DatabaseControler("TestDB.db");
+            databaseControler = new DatabaseController("TestDB.db");
             if(expectedErrorCode == 0){
                 assertDoesNotThrow(() -> databaseControler.insertUser(userName, password, rank));
                 assertEquals(rank, databaseControler.getRank(userName,password));
@@ -152,7 +144,7 @@ public class DatabaseControlerTest {
     })
     void testUpdateUser(String userName, String newPassword, int newRank, int expectedErrorCode) {
         try{
-            DatabaseControler databaseControler = new DatabaseControler("TestDB.db");
+            DatabaseController databaseControler = new DatabaseController("TestDB.db");
             if(expectedErrorCode == 0){
                 switch(newRank){
                     case 0:
@@ -213,12 +205,12 @@ public class DatabaseControlerTest {
 
     })
     void testInsertMovie(String title, String director, String genre, int releaseYear, double price, int expectedErrorCode) {
-        DatabaseControler databaseControler;
+        DatabaseController databaseControler;
         if(title == null) title ="";
         if(director == null) director ="";
         if(genre == null) genre ="";
         try {
-            databaseControler = new DatabaseControler("TestDB.db");
+            databaseControler = new DatabaseController("TestDB.db");
             Movie movie = new Movie(title, director, genre, releaseYear, price);
             if(expectedErrorCode == 0){
                databaseControler.insertMovie(movie);
@@ -253,10 +245,10 @@ public class DatabaseControlerTest {
     void testUpdateMovie(String title, String director, String genre, int releaseYear, double price, int expectedErrorCode) {
 
         Movie movieToUpdate = new Movie(title, director, genre, releaseYear, price);
-        DatabaseControler databaseController;
+        DatabaseController databaseController;
 
         try {
-            databaseController = new DatabaseControler("TestDB.db");
+            databaseController = new DatabaseController("TestDB.db");
             if (expectedErrorCode == 0) {
                 databaseController.updateMovie(movieToUpdate);
             }else{
@@ -289,12 +281,12 @@ public class DatabaseControlerTest {
             "DIRECTOR, d3, 0" 
     })
     void testGetMovie(SearchCriterion sc, String criterio, int expectedNum){
-        DatabaseControler databaseController;
+        DatabaseController databaseController;
         Map<SearchCriterion, String> criteria = new HashMap<>();
         List<Movie> movies;
         criteria.put(sc, criterio);
         try{
-            databaseController = new DatabaseControler("TestDB.db");
+            databaseController = new DatabaseController("TestDB.db");
             
             movies = databaseController.getMovies(criteria);
             
@@ -329,14 +321,14 @@ public class DatabaseControlerTest {
             "existingUser, Password1, DIRECTOR, d10, 0, true" 
     })
     void testRentMovie(String userName, String password, SearchCriterion sc, String criterio, int amount, boolean success){
-        DatabaseControler databaseController;
+        DatabaseController databaseController;
         User user;
         Map<SearchCriterion, String> criteria = new HashMap<>();
         criteria.put(sc, criterio);
         
         List<Movie> movies;
         try{
-            databaseController = new DatabaseControler("TestDB.db");
+            databaseController = new DatabaseController("TestDB.db");
             
             databaseController.delete("Borrowings", "User_ID", 1);
             databaseController.delete("Borrowings", "User_ID", 2);
@@ -398,13 +390,13 @@ public class DatabaseControlerTest {
             "existingUser, Password1, TITLE, getmovie10, 0",
     })
     void testEndRental(String userName, String password, SearchCriterion sc, String criterio, int expected){
-        DatabaseControler databaseController;
+        DatabaseController databaseController;
         User user;
         Map<SearchCriterion, String> criteria = new HashMap<>();
         criteria.put(sc, criterio);
         List<Movie> movies;
         try{
-            databaseController = new DatabaseControler("TestDB.db");
+            databaseController = new DatabaseController("TestDB.db");
             int rank = databaseController.getRank(userName,password);
             double balance = 1000;
             switch(rank){
@@ -460,9 +452,9 @@ public class DatabaseControlerTest {
             
     })
     void testGetBalance(String userName, double balance, boolean success){
-        DatabaseControler databaseController;
+        DatabaseController databaseController;
         try{
-            databaseController = new DatabaseControler("TestDB.db");
+            databaseController = new DatabaseController("TestDB.db");
             
             if(!success){
                 if(balance == databaseController.getBalance(userName))

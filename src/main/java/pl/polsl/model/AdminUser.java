@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pl.polsl.model;
 
 import java.util.ArrayList;
@@ -33,7 +29,7 @@ public class AdminUser implements User{
     /**
      * The database handler used for database operations.
      */
-    final private DatabaseControler databaseHandler;
+    final private DatabaseController databaseHandler;
     
     /**
      * The rank of the admin user.
@@ -53,7 +49,7 @@ public class AdminUser implements User{
      * @param password The password of the admin user.
      * @param balance The balance of the admin user.
      */ 
-    public AdminUser(DatabaseControler databaseHandler, String userName, String password, double balance){
+    public AdminUser(DatabaseController databaseHandler, String userName, String password, double balance){
         this.databaseHandler = databaseHandler;
         this.userName = userName;
         this.password = password;

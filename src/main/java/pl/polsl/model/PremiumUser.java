@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pl.polsl.model;
 
 import java.util.ArrayList;
@@ -33,7 +29,7 @@ public class PremiumUser implements User{
     /**
      * The database handler used for database operations.
      */
-    final private DatabaseControler databaseHandler;
+    final private DatabaseController databaseHandler;
     
     /**
      * The rank of the premium user.
@@ -53,7 +49,7 @@ public class PremiumUser implements User{
      * @param password The password of the premium user.
      * @param balance The balance of the premium user.
      */
-    public PremiumUser(DatabaseControler databaseHandler, String userName, String password, double balance){
+    public PremiumUser(DatabaseController databaseHandler, String userName, String password, double balance){
         this.databaseHandler = databaseHandler;
         this.userName = userName;
         this.password = password;
@@ -236,7 +232,6 @@ public class PremiumUser implements User{
     
     /**
      * Returns a list of movies based on the specified search criteria.
-     *
      * This method retrieves a list of movies that match the provided search criteria.
      *
      * @param criteria A map of search criteria, where keys are search terms (e.g., "author," "title," "genre," "year") and values are corresponding SearchCriterion enum values.
@@ -279,7 +274,7 @@ public class PremiumUser implements User{
     public ArrayList<Movie> getRentedMovies() throws ModelException{
         ArrayList<Movie> movies = databaseHandler.getRentedMovies(this);
         movies.forEach(movie -> {
-            double discountedPrice = Math.round(movie.getPrice() * 0.7 * 100) / 100;
+            double discountedPrice = (double) Math.round(movie.getPrice() * 0.7 * 100) / 100;
             movie.setPrice(discountedPrice);
         });
         return movies;
@@ -299,7 +294,7 @@ public class PremiumUser implements User{
     }
     
     /**
-     * End the rental of the specified movie by the given user..
+     * End the rental of the specified movie by the given user.
      *
      * @param movie The movie to be returned.
      * @throws ModelException If an error occurs while ending the rental.

@@ -1,12 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pl.polsl.model;
 
 /**
  * Custom exception class for handling model-related errors in the application.
- *
  * This exception is used to represent errors specific to the model layer of the application.
  * 
  * @author Pawel Drzazga

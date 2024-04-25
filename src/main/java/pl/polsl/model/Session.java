@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package pl.polsl.model;
 
 /**
@@ -30,17 +27,17 @@ public class Session {
     /**
      * The database controller used for database operations.
      */
-    final private DatabaseControler dataBaseControler;
+    final private DatabaseController databaseController;
     
     /**
      * Constructs a new user session with a database controller and admin user.
      *
      * @throws ModelException If there's an issue during session initialization, an exception may be thrown.
-     * @param databaseName The name of data base file.
+     * @param databaseName The name of database file.
      */
     public Session(String databaseName) throws ModelException{
-        dataBaseControler = new DatabaseControler(databaseName);
-        sessionAdmin = new AdminUser(dataBaseControler, "MovieBrowser", "javawinternecie", 0.0);
+        databaseController = new DatabaseController(databaseName);
+        sessionAdmin = new AdminUser(databaseController, "MovieBrowser", "javawinternecie", 0.0);
     }
     
     /**
@@ -117,19 +114,19 @@ public class Session {
      * @throws ModelException If there are issues during user creation or verification, an exception may be thrown.
      */
     private void makeUser(String userName, String password)throws ModelException{
-        double balance = dataBaseControler.getBalance(userName);
-        switch(dataBaseControler.getRank(userName, password)){
+        double balance = databaseController.getBalance(userName);
+        switch(databaseController.getRank(userName, password)){
             case 0:
-                user = new StandardUser(dataBaseControler, userName, password, balance);
+                user = new StandardUser(databaseController, userName, password, balance);
                 break;
             case 1:
-                user = new PremiumUser(dataBaseControler, userName, password, balance);
+                user = new PremiumUser(databaseController, userName, password, balance);
                 break;
             case 2:
-                user = new AdminUser(dataBaseControler, userName, password, balance);
+                user = new AdminUser(databaseController, userName, password, balance);
                 break;
             default:
-                int deletedRecords = dataBaseControler.delete("Users", "Username",userName);
+                int deletedRecords = databaseController.delete("Users", "Username",userName);
                 throw new ModelException("Incorrect rank token. " + deletedRecords + " record(s) deleted.", 7);
         }
         user.setRentedMoviesAmount(user.getRentedMovies().size());

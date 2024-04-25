@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package pl.polsl.model;
 
 import java.util.ArrayList;
@@ -29,7 +26,7 @@ import java.sql.ResultSet;
  * @author Pawel Drzazga
  * @version 3.0
  */
-public class DatabaseControler {
+public class DatabaseController {
     
     /**
      * Private constant representing the database connection URL.
@@ -48,7 +45,7 @@ public class DatabaseControler {
      * @param dataBaseName The name of the database file.
      * @throws ModelException If the database file is not found, an exception is thrown with error code 1.
      */
-    public DatabaseControler(String dataBaseName) throws ModelException{
+    public DatabaseController(String dataBaseName) throws ModelException{
         if(!dbExists(dataBaseName)) throw new ModelException("Database file not found.", 1);
         dbURL = "jdbc:sqlite:" + dataBaseName;
     }
@@ -89,8 +86,7 @@ public class DatabaseControler {
     private ResultSet select(String query) throws ModelException{
         try{
             Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(query);
-            return result;
+            return statement.executeQuery(query);
         }catch(SQLException e){
             throw new ModelException(e.getMessage(), 4);
         }
@@ -108,8 +104,7 @@ public class DatabaseControler {
        try{
            PreparedStatement preparedStatement = connection.prepareStatement(query);
            preparedStatement.setString(1, condition);
-           ResultSet result = preparedStatement.executeQuery();
-           return result;
+           return preparedStatement.executeQuery();
         }catch(SQLException e){
             throw new ModelException(e.getMessage(), 4);
         }
@@ -119,15 +114,15 @@ public class DatabaseControler {
      * Deletes rows from a table in the database based on a String condition.
      *
      * @param table     The name of the table from which to delete rows.
-     * @param collumn   The column in the table to use in the condition.
+     * @param column   The column in the table to use in the condition.
      * @param condition The condition to apply for deletion.
      * @return The number of rows deleted.
      * @throws ModelException If a SQL exception occurs during deletion, an exception with error code 4 is thrown.
      */
-    int delete(String table, String collumn, String condition) throws ModelException{
+    int delete(String table, String column, String condition) throws ModelException{
         try{
             connect();
-            String deleteQuery = "DELETE FROM "+table+" WHERE "+collumn+" = ?;";
+            String deleteQuery = "DELETE FROM "+table+" WHERE "+column+" = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
             preparedStatement.setString(1, condition);
             int deleteRows = preparedStatement.executeUpdate();
@@ -150,18 +145,18 @@ public class DatabaseControler {
     }
     
     /**
-     * Deletes rows from a table in the database based on a int condition.
+     * Deletes rows from a table in the database based on an int condition.
      *
      * @param table     The name of the table from which to delete rows.
-     * @param collumn   The column in the table to use in the condition.
+     * @param column   The column in the table to use in the condition.
      * @param condition The condition to apply for deletion.
      * @return The number of rows deleted.
      * @throws ModelException If a SQL exception occurs during deletion, an exception with error code 4 is thrown.
      */
-    public int delete(String table, String collumn, int condition) throws ModelException{
+    public int delete(String table, String column, int condition) throws ModelException{
         try{
             connect();
-            String deleteQuery = "DELETE FROM "+table+" WHERE "+collumn+" = ?;";
+            String deleteQuery = "DELETE FROM "+table+" WHERE "+column+" = ?;";
             PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery);
             preparedStatement.setInt(1, condition);
             int deleteRows = preparedStatement.executeUpdate();
@@ -175,7 +170,6 @@ public class DatabaseControler {
     
     /**
      * Validates a password for compliance with specified criteria.
-     *
      * This method checks whether a password meets the following criteria:
      * - It must have a minimum length of 8 characters.
      * - It must contain at least one uppercase letter.
@@ -184,7 +178,7 @@ public class DatabaseControler {
      * @return True if the password meets the criteria, false otherwise.
      */
     private boolean validatePassword(String password) {
-        if (password.length() < 8) return false;   
+        if (password.length() < 8) return false;
         for (char c : password.toCharArray()) {
             if (Character.isUpperCase(c)) {
                 return true;
@@ -195,13 +189,12 @@ public class DatabaseControler {
     
     /**
      * Validates a user login according to specified criteria.
-     *
      * This method checks whether a user login meets the following criteria:
      * - It must have a minimum length of 6 characters.
      * - It should only contain letters (both uppercase and lowercase) and digits.
      * - It should not contain any spaces.
      *
-     * @param login The user login to be validated.
+     * @param userName The user login to be validated.
      * @return True if the login meets the criteria, false otherwise.
      */
     private boolean validateUserName(String userName) {
@@ -209,9 +202,7 @@ public class DatabaseControler {
 
         if (!userName.matches("^[a-zA-Z0-9_]+$")) return false;
 
-        if (userName.contains(" ")) return false;
-
-        return true;
+        return !userName.contains(" ");
     }   
     
     /**
@@ -223,9 +214,7 @@ public class DatabaseControler {
      */
     private boolean checkUser(String userName) throws ModelException{
         try{
-            if(select("SELECT Username FROM Users WHERE Username = ?;", userName).next()){
-                return true;
-            }else return false;
+            return select("SELECT Username FROM Users WHERE Username = ?;", userName).next();
         }catch(SQLException e){
             throw new ModelException(e.getMessage(), 4);
         }
@@ -240,9 +229,7 @@ public class DatabaseControler {
      */
     private boolean checkMovie(String title) throws ModelException{
         try{
-            if(select("SELECT Title FROM Movies WHERE Title = ?;", title).next()){
-                return true;
-            }else return false;
+            return select("SELECT Title FROM Movies WHERE Title = ?;", title).next();
         }catch(SQLException e){
             throw new ModelException(e.getMessage(), 4);
         }
@@ -325,8 +312,8 @@ public class DatabaseControler {
         String genre = movie.getGenre();
         int releaseYear = movie.getReleaseYear();
         double price = movie.getPrice();
-        if(title.equals("") || director.equals("") || genre.equals("") || releaseYear < 1750 || price < 0) 
-            throw new ModelException("Incorect movie data.", 24);
+        if(title.isEmpty() || director.isEmpty() || genre.isEmpty() || releaseYear < 1750 || price < 0)
+            throw new ModelException("Incorrect movie data.", 24);
         try{
             connect();         
             if(checkMovie(title)) {
@@ -380,7 +367,6 @@ public class DatabaseControler {
     
     /**
      * Returns a list of movies based on the specified search criteria.
-     *
      * This method retrieves a list of movies that match the provided search criteria.
      *
      * @param criteria A map of search criteria, where keys are search terms (e.g., "author," "title," "genre," "year") and values are corresponding SearchCriterion enum values.
@@ -395,24 +381,24 @@ public class DatabaseControler {
                 throw new ModelException("Invalid number of arguments. Expected pairs of movie search criterion and value.",19);
             }
             ArrayList<Movie> movies = new ArrayList<>();
-            String selectQuery = "SELECT Title, Director, Genre, Release_Year, Price FROM Movies";
+            StringBuilder selectQuery = new StringBuilder("SELECT Title, Director, Genre, Release_Year, Price FROM Movies");
             int criteriaIndex = 0;
             for (SearchCriterion key : criteria.keySet()) {
                 if(criteriaIndex==0){
-                    selectQuery+=" WHERE ";
+                    selectQuery.append(" WHERE ");
                 }else{
-                    selectQuery+=" AND ";
+                    selectQuery.append(" AND ");
                 }
                 if(key == SearchCriterion.RELEASE_YEAR){
-                    selectQuery+=key.toString()+" = "+criteria.get(key);
+                    selectQuery.append(key).append(" = ").append(criteria.get(key));
                 }else{
-                    selectQuery+=key.toString()+" = '"+criteria.get(key)+"'";
+                    selectQuery.append(key.toString()).append(" = '").append(criteria.get(key)).append("'");
                 }
                 
                 criteriaIndex++;
             }
-            selectQuery += ";";
-            ResultSet resultMovies = select(selectQuery);
+            selectQuery.append(";");
+            ResultSet resultMovies = select(selectQuery.toString());
             while(resultMovies.next()){
                 String title = resultMovies.getString("Title");
                 String director = resultMovies.getString("Director");
@@ -661,8 +647,8 @@ public class DatabaseControler {
                     java.util.Date expireDate;
                     expireDate = sdf.parse(results.getString("Expires"));
                     if(expireDate.after(currentDate)){
-                        Integer result = results.getInt("BorrowingID");
-                        toDelete.add(result.toString());
+                        int result = results.getInt("BorrowingID");
+                        toDelete.add(Integer.toString(result));
                     }
                 }catch(ParseException p){
                      throw new ModelException(p.getMessage(), 4);

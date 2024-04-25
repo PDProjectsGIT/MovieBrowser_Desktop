@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pl.polsl.model;
 
 import java.util.ArrayList;
@@ -92,11 +88,7 @@ public class TableModel extends AbstractTableModel {
      * @return True if the cell is editable, false otherwise.
      */
     public boolean isCellEditable(int row, int col) {
-        if (col != columnNames.length-1) {
-            return false;
-        } else {
-            return true;
-        }
+        return col == columnNames.length - 1;
     }
 
     /**
@@ -134,8 +126,7 @@ public class TableModel extends AbstractTableModel {
      * Clears all data from the table.
      */
     public void clearTable() {
-        Object[][] newData = new Object[0][columnNames.length];
-        data = newData;
+        data = new Object[0][columnNames.length];
         fireTableDataChanged();
     }
     
@@ -147,11 +138,11 @@ public class TableModel extends AbstractTableModel {
     public ArrayList<Object[]> getSelectedRows() {
         ArrayList<Object[]> selectedRows = new ArrayList<>();
 
-        for (int i = 0; i < data.length; i++) {
-            Boolean isChecked = (Boolean) data[i][columnNames.length-1]; // 5 to numer kolumny z checkboxem
+        for (Object[] datum : data) {
+            Boolean isChecked = (Boolean) datum[columnNames.length - 1];
 
             if (isChecked != null && isChecked) {
-                selectedRows.add(data[i]);
+                selectedRows.add(datum);
             }
         }
 

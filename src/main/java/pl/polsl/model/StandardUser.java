@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package pl.polsl.model;
 
 import java.util.ArrayList;
@@ -33,7 +29,7 @@ public class StandardUser implements User {
     /**
      * The database handler used for database operations.
      */
-    final private DatabaseControler databaseHandler;
+    final private DatabaseController databaseHandler;
     
     /**
      * The rank of the standard user.
@@ -53,7 +49,7 @@ public class StandardUser implements User {
      * @param password The password of the standard user.
      * @param balance The balance of the standard user.
      */
-    public StandardUser(DatabaseControler databaseHandler, String userName, String password, double balance){
+    public StandardUser(DatabaseController databaseHandler, String userName, String password, double balance){
         this.databaseHandler = databaseHandler;
         this.userName = userName;
         this.password = password;
@@ -144,14 +140,11 @@ public class StandardUser implements User {
      */
     @Override
     public String getRankName(){
-        switch(userRank){
-            case 0: 
-                return "Standard";
-            case 1:
-                return "Premium";
-            default:
-                return "Incorrect rank";
-        }   
+        return switch (userRank) {
+            case 0 -> "Standard";
+            case 1 -> "Premium";
+            default -> "Incorrect rank";
+        };
     }
     
     /**
@@ -237,7 +230,6 @@ public class StandardUser implements User {
     
     /**
      * Returns a list of movies based on the specified search criteria.
-     *
      * This method retrieves a list of movies that match the provided search criteria.
      *
      * @param criteria A map of search criteria, where keys are search terms (e.g., "author," "title," "genre," "year") and values are corresponding SearchCriterion enum values.
@@ -301,7 +293,7 @@ public class StandardUser implements User {
     }
     
     /**
-     * End the rental of the specified movie by the given user..
+     * End the rental of the specified movie by the given user.
      *
      * @param movie The movie to be returned.
      * @throws ModelException If an error occurs while ending the rental.
